@@ -1,23 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
+import questions from './components/questions.json';
+import QuestionsComp from './components/QuestionsComp';
+import ResultComp from './components/ResultComp';
+import React, {useState} from 'react'
 
 function App() {
+  const [currentQuestion,setCurrentQuestion] = useState(0);
+  const [userAnswers, setUserAnswers] = useState([]);
+
+  const handleNextQuestion = (isCorrect) => {
+    setCurrentQuestion(currentQuestion + 1)
+    setUserAnswers([...userAnswers, isCorrect])
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setUserAnswers([]);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Quiz App</h1>
+      {currentQuestion < questions.length && 
+      <QuestionsComp question={questions[currentQuestion]} onAnswerClick={handleNextQuestion} /> }
+      {currentQuestion === questions.length && 
+      <ResultComp userAnswers={userAnswers} questions={questions} resetQuiz = {resetQuiz} />}
     </div>
   );
 }
